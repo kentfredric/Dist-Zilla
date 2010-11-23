@@ -3,7 +3,8 @@ package Dist::Zilla::Role::File;
 use Moose::Role;
 
 use Moose::Util::TypeConstraints;
-
+use Params::Util qw( _CODELIKE );
+use Carp qw();
 use namespace::autoclean;
 
 =head1 DESCRIPTION
@@ -57,8 +58,9 @@ requires 'content';
 
 sub munge {
   my ( $self, $code ) = @_;
+  Carp::croak("->munge( code ) was not passed a coderef") unless _CODELIKE($code);
   my $content = $self->content;
-  $self->content( $self->$code( $content ) );
+  $self->content( $code->($self,$content ) );
 }
 
 no Moose::Role;
