@@ -32,39 +32,43 @@ sub munge_file {
 sub munge_pod {
   my ($self, $file) = @_;
 
-  my @content = split /\n/, $file->content;
+  $file->munge(sub{
+    my  ($selffile, $content ) = @_;
+    my @content = split /\n/, $content;
 
-  require List::MoreUtils;
-  if (List::MoreUtils::any(sub { $_ =~ /^=head1 VERSION\b/ }, @content)) {
-    $self->log($file->name . ' already has a VERSION section in POD');
-    return;
-  }
+    require List::MoreUtils;
+    if (List::MoreUtils::any(sub { $_ =~ /^=head1 VERSION\b/ }, @content)) {
+      $self->log($file->name . ' already has a VERSION section in POD');
+      return;
+    }
 
-  for (0 .. $#content) {
-    next until $content[$_] =~ /^=head1 NAME/;
+    for (0 .. $#content) {
+      next until $content[$_] =~ /^=head1 NAME/;
 
-    $_++; # move past the =head1 line itself
-    $_++ while $content[$_] =~ /^\s*$/;
+      $_++; # move past the =head1 line itself
+      $_++ while $content[$_] =~ /^\s*$/;
 
-    $_++; # move past the line with the abstract
-    $_++ while $content[$_] =~ /^\s*$/;
+      $_++; # move past the line with the abstract
+      $_++ while $content[$_] =~ /^\s*$/;
 
-    splice @content, $_ - 1, 0, (
-      q{},
-      "=head1 VERSION",
-      q{},
-      "version " . $self->zilla->version . q{},
-    );
+      splice @content, $_ - 1, 0, (
+        q{},
+        "=head1 VERSION",
+        q{},
+        "version " . $self->zilla->version . q{},
+      );
 
-    $self->log_debug([ 'adding VERSION Pod section to %s', $file->name ]);
-    $file->content(join "\n", @content);
-    return;
-  }
+      $self->log_debug([ 'adding VERSION Pod section to %s', $file->name ]);
+      return join "\n", @content;
+    }
 
-  $self->log([
-    "couldn't find '=head1 VERSION' in %s, not adding '=head1 VERSION'",
-    $file->name,
-  ]);
+    $self->log([
+      "couldn't find '=head1 VERSION' in %s, not adding '=head1 VERSION'",
+      $file->name,
+    ]);
+
+    return $content;
+  });
 }
 
 __PACKAGE__->meta->make_immutable;
