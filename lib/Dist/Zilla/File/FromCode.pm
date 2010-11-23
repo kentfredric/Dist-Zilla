@@ -1,7 +1,8 @@
 package Dist::Zilla::File::FromCode;
 # ABSTRACT: a file whose content is (re-)built on demand
 use Moose;
-
+use Params::Util qw( _CODELIKE );
+use Carp qw();
 =head1 DESCRIPTION
 
 This represents a file whose contents will be generated on demand from a
@@ -31,9 +32,10 @@ sub content {
 
 sub munge {
   my ( $self, $munger ) = @_ ;
+  Carp::croak('->munge( munger )  was not passed a coderef' ) unless _CODELIKE($munger);
   my $orig = $self->code;
   $self->code(sub {
-    return $self->$munger( $self->$orig );
+    return $munger->( $self, $self->$orig );
   });
 }
 
