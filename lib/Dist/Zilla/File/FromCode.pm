@@ -29,6 +29,14 @@ sub content {
   return $self->$code;
 }
 
+sub munge {
+  my ( $self, $munger ) = @_ ;
+  my $orig = $self->code;
+  $self->code(sub {
+    return $self->$munger( $self->$orig );
+  });
+}
+
 with 'Dist::Zilla::Role::File';
 __PACKAGE__->meta->make_immutable;
 no Moose;
