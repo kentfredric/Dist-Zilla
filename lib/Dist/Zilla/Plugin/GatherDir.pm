@@ -3,7 +3,7 @@ package Dist::Zilla::Plugin::GatherDir;
 
 use Moose;
 use Moose::Autobox;
-use MooseX::Types::Path::Class qw(Dir File);
+use Dist::Zilla::Types::Path qw(Dir File);
 with 'Dist::Zilla::Role::FileGatherer';
 
 use namespace::autoclean;
