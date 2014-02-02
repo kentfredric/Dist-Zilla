@@ -6,7 +6,7 @@ extends 'Dist::Zilla';
 
 use Moose::Autobox 0.09; # ->flatten
 use MooseX::Types::Moose qw(HashRef);
-use MooseX::Types::Path::Class qw(Dir File);
+use Dist::Zilla::Types::Path qw(Dir File);
 
 use File::pushd ();
 use Path::Class;
