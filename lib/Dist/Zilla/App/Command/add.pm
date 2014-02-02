@@ -4,7 +4,7 @@ package Dist::Zilla::App::Command::add;
 # ABSTRACT: add a module to a dist
 
 use Dist::Zilla::App -command;
-use Path::Class;
+use Dist::Zilla::Path;
 use File::pushd ();
 
 =head1 SYNOPSIS
@@ -61,7 +61,7 @@ sub execute {
     },
   );
 
-  my $root = dir($zilla->root)->absolute;
+  my $root = path($zilla->root)->absolute;
   my $wd = File::pushd::pushd($minter->root);
 
   for my $name ( @$arg ) {

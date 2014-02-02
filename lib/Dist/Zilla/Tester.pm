@@ -65,7 +65,7 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
     my ($self, $filename) = @_;
 
     Dist::Zilla::Path::path(
-      $self->tempdir->file($filename)
+      $self->tempdir->child($filename)
     )->slurp_utf8;
   }
 
@@ -73,7 +73,7 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
     my ($self, $filename) = @_;
 
     Dist::Zilla::Path::path(
-      $self->tempdir->file($filename)
+      $self->tempdir->child($filename)
     )->slurp_raw;
   }
 
@@ -90,7 +90,7 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
   with 'Dist::Zilla::Tester::_Role';
 
   use File::Copy::Recursive qw(dircopy);
-  use Path::Class;
+  use Dist::Zilla::Path;
 
   around from_config => sub {
     my ($orig, $self, $arg, $tester_arg) = @_;
@@ -105,26 +105,26 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
 
     mkdir $tempdir_root if defined $tempdir_root and not -d $tempdir_root;
 
-    my $tempdir = dir( File::Temp::tempdir(
+    my $tempdir = path( File::Temp::tempdir(
         CLEANUP => 1,
         (defined $tempdir_root ? (DIR => $tempdir_root) : ()),
     ))->absolute;
 
-    my $root = $tempdir->subdir('source');
+    my $root = $tempdir->child('source');
     $root->mkpath;
 
     dircopy($source, $root);
 
     if ($tester_arg->{also_copy}) {
       while (my ($src, $dest) = each %{ $tester_arg->{also_copy} }) {
-        dircopy($src, $tempdir->subdir($dest));
+        dircopy($src, $tempdir->child($dest));
       }
     }
 
     if (my $files = $tester_arg->{add_files}) {
       while (my ($name, $content) = each %$files) {
-        my $fn = $tempdir->file($name);
-        $fn->dir->mkpath;
+        my $fn = $tempdir->child($name);
+        $fn->parent->mkpath;
         Dist::Zilla::Path::path($fn)->spew_utf8($content);
       }
     }
@@ -149,7 +149,7 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
     my $wd = File::pushd::pushd($self->root);
 
     $target ||= do {
-      my $target = dir($self->tempdir)->subdir('build');
+      my $target = path($self->tempdir)->child('build');
       $target->mkpath;
       $target;
     };
@@ -178,13 +178,13 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
   with 'Dist::Zilla::Tester::_Role';
 
   use File::Copy::Recursive qw(dircopy);
-  use Path::Class;
+  use Dist::Zilla::Path;
 
   sub _mint_target_dir {
     my ($self) = @_;
 
     my $name = $self->name;
-    my $dir  = $self->tempdir->subdir('mint')->absolute;
+    my $dir  = $self->tempdir->child('mint')->absolute;
 
     $self->log_fatal("$dir already exists") if -e $dir;
 
@@ -194,7 +194,7 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
   sub _setup_global_config {
     my ($self, $dir, $arg) = @_;
 
-    my $config_base = $dir->file('config');
+    my $config_base = path($dir)->child('config');
 
     my $stash_registry = {};
 
@@ -223,7 +223,7 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
 
     mkdir $tempdir_root if defined $tempdir_root and not -d $tempdir_root;
 
-    my $tempdir = dir( File::Temp::tempdir(
+    my $tempdir = path( File::Temp::tempdir(
         CLEANUP => 1,
         (defined $tempdir_root ? (DIR => $tempdir_root) : ()),
     ))->absolute;

@@ -4,7 +4,7 @@ package Dist::Zilla::Util::AuthorDeps;
 # ABSTRACT: Utils for listing your distribution's author dependencies
 
 use Dist::Zilla::Util;
-use Path::Class;
+use Dist::Zilla::Path;
 use List::MoreUtils ();
 
 
@@ -23,7 +23,7 @@ sub format_author_deps {
 sub extract_author_deps {
   my ($root, $missing) = @_;
 
-  my $ini = $root->file('dist.ini');
+  my $ini = path($root)->child('dist.ini');
 
   die "dzil authordeps only works on dist.ini files, and you don't have one\n"
     unless -e $ini;
