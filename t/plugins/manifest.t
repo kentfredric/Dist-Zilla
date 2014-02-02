@@ -26,7 +26,7 @@ my $tzil = Builder->from_config(
 
 $tzil->build;
 
-my $manihash = ExtUtils::Manifest::maniread($tzil->built_in->file('MANIFEST'));
+my $manihash = ExtUtils::Manifest::maniread($tzil->built_in->child('MANIFEST'));
 
 is_deeply(
   [ sort keys %$manihash ],

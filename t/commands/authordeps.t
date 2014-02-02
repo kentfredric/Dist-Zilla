@@ -7,11 +7,11 @@ use lib 't/lib';
 use autodie;
 
 use Dist::Zilla::Util::AuthorDeps;
-use Path::Class;
+use Dist::Zilla::Path;
 
 my $authordeps =
     Dist::Zilla::Util::AuthorDeps::extract_author_deps(
-	dir('corpus/dist/AutoPrereqs'),
+	path('corpus/dist/AutoPrereqs'),
 	0
     );
 
