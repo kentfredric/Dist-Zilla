@@ -16,7 +16,7 @@ use Dist::Zilla::Types qw(License);
 
 use Log::Dispatchouli 1.100712; # proxy_loggers, quiet_fatal
 use Path::Class;
-use Path::Tiny;
+use Dist::Zilla::Path;
 use List::Util qw(first);
 use Software::License 0.101370; # meta2_name
 use String::RewritePrefix;

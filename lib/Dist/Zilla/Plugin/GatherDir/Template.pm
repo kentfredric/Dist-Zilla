@@ -10,7 +10,7 @@ use namespace::autoclean;
 use autodie;
 use Moose::Autobox;
 use Dist::Zilla::File::FromCode;
-use Path::Tiny;
+use Dist::Zilla::Path;
 
 =head1 DESCRIPTION
 

@@ -13,7 +13,7 @@ use Dist::Zilla::Chrome::Test;
 use File::pushd ();
 use File::Spec;
 use File::Temp;
-use Path::Tiny;
+use Dist::Zilla::Path;
 
 use Sub::Exporter::Util ();
 use Sub::Exporter -setup => {
@@ -64,7 +64,7 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
   sub slurp_file {
     my ($self, $filename) = @_;
 
-    Path::Tiny::path(
+    Dist::Zilla::Path::path(
       $self->tempdir->file($filename)
     )->slurp_utf8;
   }
@@ -72,7 +72,7 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
   sub slurp_file_raw {
     my ($self, $filename) = @_;
 
-    Path::Tiny::path(
+    Dist::Zilla::Path::path(
       $self->tempdir->file($filename)
     )->slurp_raw;
   }
@@ -125,7 +125,7 @@ sub minter { 'Dist::Zilla::Tester::_Minter' }
       while (my ($name, $content) = each %$files) {
         my $fn = $tempdir->file($name);
         $fn->dir->mkpath;
-        Path::Tiny::path($fn)->spew_utf8($content);
+        Dist::Zilla::Path::path($fn)->spew_utf8($content);
       }
     }
 

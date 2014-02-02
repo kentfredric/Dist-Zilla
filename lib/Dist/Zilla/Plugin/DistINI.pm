@@ -8,7 +8,7 @@ use Dist::Zilla::File::FromCode;
 
 use Moose::Autobox 0.10; # for ->each_value
 use MooseX::Types::Moose qw(ArrayRef Str);
-use Path::Tiny;
+use Dist::Zilla::Path;
 
 use namespace::autoclean;
 

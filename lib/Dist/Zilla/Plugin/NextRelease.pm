@@ -11,7 +11,7 @@ with (
 );
 
 use DateTime 0.44; # CLDR fixes
-use Path::Tiny;
+use Dist::Zilla::Path;
 use Moose::Util::TypeConstraints;
 use String::Formatter 0.100680 stringf => {
   -as => '_format_version',
