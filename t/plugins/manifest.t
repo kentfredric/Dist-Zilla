@@ -20,6 +20,7 @@ my $tzil = Builder->from_config(
       $^O eq "MSWin32" ? () : (
         q{source/file\\with some\\whacks.txt} => "bar\n",
         q{source/file'with'quotes\\or\\backslash.txt} => "quux\n",
+        q{source/dir\\with some\\/whacks.txt} => "mar\n",
       ),
     },
   },
@@ -41,6 +42,7 @@ cmp_deeply(
     $^O eq "MSWin32" ? () : (
       q{file\\with some\\whacks.txt},
       q{file'with'quotes\\or\\backslash.txt},
+      q{dir\\with some\\/whacks.txt},
     ),
   ),
   'manifest quotes files with spaces'
@@ -61,6 +63,7 @@ cmp_deeply(
     $^O eq "MSWin32" ? () : (
       q{'file\\\\with some\\\\whacks.txt'},
       q{'file\\'with\\'quotes\\\\or\\\\backslash.txt'},
+      q{'dir\\\\with some\\\\/whacks.txt'},
     ),
   ),
   'manifest quotes files with spaces'
