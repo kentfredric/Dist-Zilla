@@ -9,7 +9,7 @@ use Dist::Zilla::App;
 use File::Copy::Recursive qw(dircopy);
 use File::pushd ();
 use File::Spec;
-use File::Temp;
+use Test::TempDir::Tiny;
 use Path::Class;
 
 use Sub::Exporter::Util ();
@@ -26,7 +26,7 @@ sub test_dzil {
 
   local @INC = map {; File::Spec->rel2abs($_) } @INC;
 
-  my $tmpdir = $arg->{tempdir} || File::Temp::tempdir(CLEANUP => 1);
+  my $tmpdir = $arg->{tempdir} || Test::TempDir::Tiny::tempdir('dz_app');
   my $root   = dir($tmpdir)->subdir('source');
   $root->mkpath;
 
